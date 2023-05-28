@@ -41,7 +41,7 @@ const Home = () => {
 
   const getAllJobs = async () => {
     try {
-      const { data } = await axios.get("http://localhost:4000/api/job");
+      const { data } = await axios.get("/api/job");
       dispatch(getJobs(data.jobs));
       setIsLoading(false);
     } catch (error) {
