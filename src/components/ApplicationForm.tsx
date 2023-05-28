@@ -1,5 +1,5 @@
 import { useState, FormEvent } from "react";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
 const ApplicationForm = () => {
@@ -25,13 +25,18 @@ const ApplicationForm = () => {
     });
   };
 
+  const instance = axios.create({
+    baseURL: import.meta.env.VITE_SERVER,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  } as AxiosRequestConfig);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `http://localhost:4000/api/apply/${id}`,
-        applicantDetails
-      );
+      await instance.post(`/api/apply/${id}`, applicantDetails);
       navigate("/submitted");
     } catch (error: any) {
       console.error(error);

@@ -1,7 +1,7 @@
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useEffect } from "react";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { apply } from "../features/jobs/JobSlice";
@@ -11,9 +11,17 @@ const JobToApply = () => {
   const dispatch = useAppDispatch();
   const { jobToApply } = useAppSelector((state) => state.jobs);
 
+  const instance = axios.create({
+    baseURL: import.meta.env.VITE_SERVER,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  } as AxiosRequestConfig);
+
   const fetchJob = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:4000/api/job/${id}`);
+      const { data } = await instance.get(`/api/job/${id}`);
 
       dispatch(apply(data.job));
     } catch (error) {

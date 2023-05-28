@@ -3,7 +3,7 @@ import { MdLocationOn } from "react-icons/md";
 import NavBar from "../components/NavBar";
 import JobList from "../components/JobList";
 import { lazy, Suspense } from "react";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { getJobs } from "../features/jobs/JobSlice";
 import { useAppDispatch, useAppSelector } from "../app/store";
 import { useEffect, useState } from "react";
@@ -26,6 +26,14 @@ const Home = () => {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
   const [showSelectedJob, setShowSelectedJob] = useState(false);
 
+  const instance = axios.create({
+    baseURL: import.meta.env.VITE_SERVER,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  } as AxiosRequestConfig);
+
   useEffect(() => {
     const handleResize = () => {
       setScreenSize(window.innerWidth);
@@ -41,7 +49,7 @@ const Home = () => {
 
   const getAllJobs = async () => {
     try {
-      const { data } = await axios.get("http://localhost:4000/api/job");
+      const { data } = await instance.get("/api/job");
       dispatch(getJobs(data.jobs));
       setIsLoading(false);
     } catch (error) {

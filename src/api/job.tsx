@@ -1,17 +1,23 @@
-import axios from "axios";
-axios.defaults.withCredentials = true;
+import axios, { AxiosRequestConfig } from "axios";
+
+const instance = axios.create({
+  baseURL: import.meta.env.VITE_SERVER,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+} as AxiosRequestConfig);
+
+instance.defaults.withCredentials = true;
 
 export const createJob = async (jobData: any) => {
-  return await axios.post("http://localhost:4000/api/job/create", jobData);
+  return await instance.post("/api/job/create", jobData);
 };
 
 export const updateJob = async (jobData: any, id: string | undefined) => {
-  return await axios.patch(
-    `http://localhost:4000/api/job/update/${id}`,
-    jobData
-  );
+  return await instance.patch(`/api/job/update/${id}`, jobData);
 };
 
 export const deleteJob = async (id: string | undefined) => {
-  return await axios.delete(`http://localhost:4000/api/job/${id}`);
+  return await instance.delete(`/api/job/${id}`);
 };
